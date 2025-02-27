@@ -2,22 +2,20 @@ const { merge } = require('webpack-merge');
 const commonConfiguration = require('./webpack.common.js');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const path = require('path');
 
 module.exports = merge(commonConfiguration, {
-  mode: 'production', // Production mode for optimizations
+  mode: 'production',
   output: {
-    path: path.resolve(__dirname, '../dist'), // Output to 'dist' folder
-    filename: 'bundle.[contenthash].js', // Add content hash for cache busting
-    publicPath: '/', // Ensure correct path for assets
+    path: path.resolve(__dirname, '../dist'),
+    filename: 'bundle.[contenthash].js',
+    publicPath: '/',
   },
   plugins: [
-    new CleanWebpackPlugin(), // Clean the output directory before building
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'styles.[contenthash].css', // Extract CSS into separate files
+      filename: 'styles.[contenthash].css',
     }),
   ],
   module: {
@@ -25,21 +23,16 @@ module.exports = merge(commonConfiguration, {
       {
         test: /\.css$/,
         use: [
-          MiniCssExtractPlugin.loader, // Extract CSS for production
+          MiniCssExtractPlugin.loader,
           'css-loader',
         ],
       },
-      // Add other loaders for images, fonts, etc.
     ],
   },
   optimization: {
-    minimize: true, // Enable minimization
+    minimize: true,
     minimizer: [
-      new TerserPlugin(), // Minify JavaScript
-      new CssMinimizerPlugin(), // Minify CSS
+      new TerserPlugin(), // Minify JavaScript only
     ],
-    splitChunks: {
-      chunks: 'all', // Split common dependencies into separate chunks
-    },
   },
 });
