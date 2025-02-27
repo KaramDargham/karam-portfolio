@@ -1,39 +1,42 @@
-const { merge } = require('webpack-merge')
-const commonConfiguration = require('./webpack.common.js')
-const ip = require('internal-ip')
-const portFinderSync = require('portfinder-sync')
+const { merge } = require('webpack-merge');
+const commonConfiguration = require('./webpack.common.js');
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const infoColor = (_message) =>
-{
-    return `\u001b[1m\u001b[34m${_message}\u001b[39m\u001b[22m`
-}
-
-module.exports = merge(
-    commonConfiguration,
-    {
-        mode: 'development',
-        devServer:
-        {
-            host: '0.0.0.0',
-            port: portFinderSync.getPort(8080),
-            contentBase: './dist',
-            watchContentBase: true,
-            open: true,
-            https: false,
-            useLocalIp: true,
-            disableHostCheck: true,
-            overlay: true,
-            noInfo: true,
-            after: function(app, server, compiler)
-            {
-                const port = server.options.port
-                const https = server.options.https ? 's' : ''
-                const localIp = ip.v4.sync()
-                const domain1 = `http${https}://${localIp}:${port}`
-                const domain2 = `http${https}://localhost:${port}`
-                
-                console.log(`Project running at:\n  - ${infoColor(domain1)}\n  - ${infoColor(domain2)}`)
-            }
-        }
-    }
-)
+module.exports = merge(commonConfiguration, {
+  mode: 'production', // Set to production mode
+  output: {
+    path: path.resolve(__dirname, '../dist'), // Output to a 'dist' folder
+    filename: 'bundle.[contenthash].js', // Add content hash for cache busting
+    publicPath: '/', // Ensure correct path for assets
+  },
+  plugins: [
+    new CleanWebpackPlugin(), // Clean the output directory before building
+    new MiniCssExtractPlugin({
+      filename: 'styles.[contenthash].css', // Extract CSS into separate files
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'public', to: '' }, // Copy static assets from 'public' to 'dist'
+      ],
+    }),
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader, // Extract CSS for production
+          'css-loader',
+        ],
+      },
+      // Add other loaders for images, fonts, etc.
+    ],
+  },
+  optimization: {
+    minimize: true, // Minify JavaScript and CSS
+    // Add other optimizations like splitChunks if needed
+  },
+});
