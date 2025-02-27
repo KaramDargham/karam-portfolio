@@ -19,11 +19,6 @@ module.exports = merge(commonConfiguration, {
     new MiniCssExtractPlugin({
       filename: 'styles.[contenthash].css', // Extract CSS into separate files
     }),
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: 'public', to: '' }, // Copy static assets from 'public' to 'dist'
-      ],
-    }),
   ],
   module: {
     rules: [
