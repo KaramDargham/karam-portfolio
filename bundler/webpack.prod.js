@@ -8,7 +8,7 @@ const path = require('path');
 module.exports = merge(commonConfiguration, {
   mode: 'production',
   output: {
-    path: path.resolve(__dirname, '../dist'),
+    path: path.resolve(__dirname, '../public'), // Change from 'dist' to 'public'
     filename: 'bundle.[contenthash].js',
     publicPath: '/',
   },
