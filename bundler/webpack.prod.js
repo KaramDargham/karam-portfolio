@@ -6,33 +6,28 @@ const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 
 module.exports = merge(commonConfiguration, {
-  mode: 'production',
-  output: {
-    path: path.resolve(__dirname, '../public'), // Change from 'dist' to 'public'
-    filename: 'bundle.[contenthash].js',
-    publicPath: '/',
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({
-      filename: 'styles.[contenthash].css',
-    }),
-  ],
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
+    mode: 'production',
+    output: {
+        path: path.resolve(__dirname, '../public'), // Ensure Vercel picks up the right directory
+        filename: 'bundle.[contenthash].js',
+        publicPath: '/',
+    },
+    plugins: [
+        new CleanWebpackPlugin(),
+        new MiniCssExtractPlugin({
+            filename: 'styles.[contenthash].css',
+        }),
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+            },
         ],
-      },
-    ],
-  },
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin(), // Minify JavaScript only
-    ],
-  },
+    },
+    optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin()],
+    },
 });
