@@ -7,7 +7,7 @@ import {
   Vector3,
 } from "three";
 import Experience from "./Experience";
-import cubeInfo from "../../static/assets/json/cubeInfo.json";
+import cubeInfo from "../../public/assets/json/cubeInfo.json";
 import { RUBIK_ROTATION_Y } from "./constants.js";
 
 import { gsap } from "gsap";
