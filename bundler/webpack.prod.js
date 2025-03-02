@@ -8,10 +8,10 @@ const path = require('path');
 module.exports = merge(commonConfiguration, {
     mode: 'production',
     output: {
-        path: path.resolve(__dirname, '../public'), // Ensure Vercel picks up the right directory
+        path: path.resolve(__dirname, '../dist'),
         filename: 'bundle.[contenthash].js',
-        publicPath: '/',
-    },
+        publicPath: './',
+    },    
     plugins: [
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
